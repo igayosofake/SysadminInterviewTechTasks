@@ -12,7 +12,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # make sure master is defined last as then the slaves will auto get nats install synced
   config.vm.define "techvm", autostart: true, primary:true do |techvm|
       techvm.vm.box = "ubuntu1404"
-      techvm.vm.box_url = "https://vagrantcloud.com/ubuntu/trusty64/version/1/provider/virtualbox.box"
+      #techvm.vm.box_url = "https://vagrantcloud.com/ubuntu/trusty64/version/1/provider/virtualbox.box"
+      techvm.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
 
       techvm.vm.network :private_network, ip: "172.16.2.12"
 
@@ -22,8 +23,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
          v.gui = false
          v.customize ["modifyvm", :id, "--memory", 1024]
          v.customize ["modifyvm", :id, "--cpus", 2]
-         v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-         v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+         #v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+         #v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
       end
 
       techvm.vm.hostname = "techtask"
