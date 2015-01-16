@@ -8,7 +8,6 @@
 #
 
 include_recipe "sudo"
-include_recipe "mysql"
 
 user "blogger" do
   supports :manage_home => true
@@ -25,9 +24,9 @@ sudo 'blogger' do
 end
 
 mysql_service 'default' do
-  version '5.7'
-  run_user mysql
-  run_group mysql
+  version '5.6'
+  run_user 'mysql'
+  run_group 'mysql'
   bind_address '0.0.0.0'
   port '3306'  
   data_dir '/var/lib/mysql'
