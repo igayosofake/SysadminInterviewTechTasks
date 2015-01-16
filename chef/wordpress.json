@@ -1,5 +1,5 @@
 {
   "mysql": {"server_root_password": "Ch4ng3me"},
-  "wordpress": {"db_password": "wordpresssecuritysucks", "path": "/home/blogger/wordpress"},
+  "wordpress": {"db_password": "wordpresssecuritysucks"},
   "run_list": [ "recipe[systest]" ]
 }

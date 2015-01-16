@@ -1,23 +1,15 @@
 systest Cookbook
 ================
-TODO: Enter the cookbook description here.
-
-e.g.
-This cookbook makes your favorite breakfast sandwich.
+This cookbook prepare a fresh wordpress installation with some features required.
 
 Requirements
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
-
-e.g.
-#### packages
-- `toaster` - systest needs toaster to brown your bagel.
+No requirements for use this cookbook. Tested only in ubuntu linux 14.04.
 
 Attributes
 ----------
-TODO: List your cookbook attributes here.
+Only a few attributes:
 
-e.g.
 #### systest::default
 <table>
   <tr>
@@ -27,42 +19,79 @@ e.g.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['systest']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
+    <td><tt>['wordpress']['database']</tt></td>
+    <td>Varchar</td>
+    <td>Set database name for wordpress</td>
+    <td><tt>true</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['wordpress']['path']</tt></td>
+    <td>Varchar</td>
+    <td>Set path for wordpress installation</td>
+    <td><tt>true</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['wordpress']['db_username']</tt></td>
+    <td>Varchar</td>
+    <td>Set database username for wordpress</td>
+    <td><tt>true</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['systest']['server_name']</tt></td>
+    <td>Varchar</td>
+    <td>Servername to access webserver</td>
     <td><tt>true</tt></td>
   </tr>
 </table>
 
+Directories
+-----------
+- `attributes` - default attributes
+- `files` - folder with certificates for apache2
+- `recipes` - common recipes
+- `templates` - commong templates
+
+Cookbooks
+---------
+- apache2
+- apt
+- build-essential
+- chef_handler
+- chef-sugar
+- database
+- iis
+- iptables
+- logrotate
+- mariadb
+- mysql
+- mysql2_chef_gem
+- openssl
+- php
+- postgresql
+- rbac
+- smf
+- sudo
+- windows
+- xml
+- yum
+- yum-epel
+- yum-mysql-community
+
 Usage
 -----
 #### systest::default
-TODO: Write usage instructions for each cookbook.
-
-e.g.
-Just include `systest` in your node's `run_list`:
+Include `systest` in your node's `run_list`. You must specify a root password for `MySQL` and password for wordpress user:
 
 ```json
 {
-  "name":"my_node",
-  "run_list": [
-    "recipe[systest]"
-  ]
+  "name": "my_node",
+  "mysql": {"server_root_password": "Ch4ng3me"},
+  "wordpress": {"db_password": "wordpresssecuritysucks"},
+  "run_list": [ "recipe[systest]" ]
 }
+
 ```
-
-Contributing
-------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
-
-e.g.
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write your change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
 
 License and Authors
 -------------------
-Authors: TODO: List authors
+Authors: me! 

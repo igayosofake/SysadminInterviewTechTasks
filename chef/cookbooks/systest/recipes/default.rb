@@ -2,7 +2,7 @@
 # Cookbook Name:: systest
 # Recipe:: default
 #
-# Copyright 2015, YOUR_COMPANY_NAME
+# Copyright 2015, igayosofake 
 #
 # All rights reserved - Do Not Redistribute
 #
@@ -14,6 +14,7 @@ include_recipe "apache2::mod_ssl"
 include_recipe "php"
 include_recipe "php::module_mysql"
 
+# Create user
 user "blogger" do
   supports :manage_home => true
   comment "blogger User"
@@ -23,11 +24,13 @@ user "blogger" do
   password "$1$mJ6aTqJG$KJJ1r4dMdZ9M7KRgqiP.Y/"
 end
 
+# Add to sudoers for command
 sudo 'blogger' do
   user      "blogger"
   commands  ['/etc/init.d/hostname']
 end
 
+# Install MySQL 5.6
 mysql_service 'default' do
   version '5.6'
   run_user 'mysql'
@@ -39,11 +42,13 @@ mysql_service 'default' do
   action [:start]
 end
 
+# Create databse for wordpress
 mysql_database node['wordpress']['database'] do
   connection ({:host => '127.0.0.1', :username => 'root', :password => node['mysql']['server_root_password']})
   action :create
 end
 
+# Create user for wordpress
 mysql_database_user node['wordpress']['db_username'] do
   connection ({:host => '127.0.0.1', :username => 'root', :password => node['mysql']['server_root_password']})
   password node['wordpress']['db_password']
@@ -52,6 +57,7 @@ mysql_database_user node['wordpress']['db_username'] do
   action :grant
 end
 
+# Force apache2 to use mpm_prefork and not use event
 apache_module "mpm_event" do
   enable false
 end
@@ -60,6 +66,7 @@ apache_module "mpm_prefork" do
   enable true
 end
 
+# Install last wordpress version from wordpress website
 wordpress_latest = Chef::Config[:file_cache_path] + "/wordpress-latest.tar.gz"
 
 remote_file wordpress_latest do
@@ -81,6 +88,7 @@ execute "untar-wordpress" do
   creates node['wordpress']['path'] + "/wp-settings.php"
 end
 
+# This is for preparing wp-config file with random hashes (wordpress mandatory)
 wp_secrets = Chef::Config[:file_cache_path] + '/wp-secrets.php'
 
 if File.exist?(wp_secrets)
@@ -105,12 +113,14 @@ template node['wordpress']['path'] + '/wp-config.php' do
     :wp_secrets      => salt_data)
 end
 
+# Create new apache2 virtualhost for wordpress
 web_app 'systest' do
   template 'wordpress.conf.erb'
   docroot node['wordpress']['path']
   server_name node['systest']['server_name']
 end
 
+# Create certificates folder and upload
 directory '/etc/ssl/localcerts' do
   owner "www-data"
   group "www-data"
