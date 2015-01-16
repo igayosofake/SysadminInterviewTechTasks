@@ -10,6 +10,7 @@
 include_recipe "sudo"
 include_recipe "apache2"
 include_recipe "apache2::mod_php5"
+include_recipe "apache2::mod_ssl"
 include_recipe "php"
 include_recipe "php::module_mysql"
 
@@ -108,4 +109,22 @@ web_app 'systest' do
   template 'wordpress.conf.erb'
   docroot node['wordpress']['path']
   server_name node['systest']['server_name']
+end
+
+directory '/etc/ssl/localcerts' do
+  owner "www-data"
+  group "www-data"
+  mode "0755"
+  action :create
+  recursive true
+end
+
+cookbook_file 'apache.pem' do
+  path '/etc/ssl/localcerts/apache.pem'
+  action :create_if_missing
+end
+
+cookbook_file 'apache.key' do
+  path '/etc/ssl/localcerts/apache.key'
+  action :create_if_missing
 end
