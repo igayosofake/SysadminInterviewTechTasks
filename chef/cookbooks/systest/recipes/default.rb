@@ -34,6 +34,19 @@ mysql_service 'default' do
   bind_address '0.0.0.0'
   port '3306'  
   data_dir '/var/lib/mysql'
-  initial_root_password 'Ch4ng3me'
-  action [:create, :start]
+  initial_root_password node['mysql']['server_root_password'] 
+  action [:start]
+end
+
+mysql_database node['systest']['database'] do
+  connection ({:host => '127.0.0.1', :username => 'root', :password => node['mysql']['server_root_password']})
+  action :create
+end
+
+mysql_database_user node['systest']['db_username'] do
+  connection ({:host => '127.0.0.1', :username => 'root', :password => node['mysql']['server_root_password']})
+  password node['wordpress_user']['db_password']
+  database_name node['systest']['database']
+  privileges [:select,:update,:insert,:create,:delete]
+  action :grant
 end
