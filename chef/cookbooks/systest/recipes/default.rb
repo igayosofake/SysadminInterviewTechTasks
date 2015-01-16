@@ -8,6 +8,7 @@
 #
 
 include_recipe "sudo"
+include_recipe "mysql"
 
 user "blogger" do
   supports :manage_home => true
@@ -21,4 +22,15 @@ end
 sudo 'blogger' do
   user      "blogger"
   commands  ['/etc/init.d/hostname']
+end
+
+mysql_service 'default' do
+  version '5.7'
+  run_user mysql
+  run_group mysql
+  bind_address '0.0.0.0'
+  port '3306'  
+  data_dir '/var/lib/mysql'
+  initial_root_password 'Ch4ng3me'
+  action [:create, :start]
 end
