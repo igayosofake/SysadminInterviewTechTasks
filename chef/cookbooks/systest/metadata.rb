@@ -8,3 +8,5 @@ version          '0.1.0'
 
 depends "sudo"
 depends "mysql"
+depends "apache2"
+depends "php"
